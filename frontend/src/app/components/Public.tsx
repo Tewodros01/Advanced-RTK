@@ -34,6 +34,12 @@ const Public: FC = () => {
         >
           Employee Login
         </Link>
+        <Link
+          to="/register"
+          className="text-lg text-blue-500 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
+        >
+          Employee Register
+        </Link>
       </footer>
     </section>
   );

@@ -17,7 +17,7 @@ interface RefreshResult {
 }
 
 const baseQuery: BaseQueryFn = fetchBaseQuery({
-  baseUrl: "http://127.0.0.1:3500/api",
+  baseUrl: "http://127.0.0.1:3500",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;

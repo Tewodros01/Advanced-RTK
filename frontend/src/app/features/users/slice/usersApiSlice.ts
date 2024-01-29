@@ -1,8 +1,6 @@
 import { apiSlice } from "../../../../API/appApi";
 import { User } from "../../../../types/user";
 
-// Define the shape of the response returned from the API
-
 // Define the users API slice
 export const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

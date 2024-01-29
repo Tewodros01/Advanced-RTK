@@ -2,6 +2,7 @@ const User = require("../model/User");
 const bcrypt = require("bcrypt");
 
 const handleNewUser = async (req, res) => {
+  console.log("Hi");
   const { email, password } = req.body;
   if (!email || !password)
     return res

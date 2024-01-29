@@ -8,18 +8,19 @@ import React, {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AuthResponse } from "../../../../types/authresponse";
-import { useLoginMutation } from "../slice/authApiSlice";
+import { useRegisterMutation } from "../slice/authApiSlice";
 import { setCredentials } from "../slice/authSlice";
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const userRef = useRef<HTMLInputElement>(null);
   const errRef = useRef<HTMLParagraphElement>(null);
   const [email, setEmail] = useState<string>("");
-  const [passowrnd, setpPassowrnd] = useState<string>("");
+  const [fullName, setFullName] = useState<string>("");
+  const [passowrd, setPassowrd] = useState<string>("");
   const [errMsg, setErrMsg] = useState<string>("");
   const navigate = useNavigate();
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [register, { isLoading }] = useRegisterMutation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,23 +31,26 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     setErrMsg("");
-  }, [email, passowrnd]);
+  }, [email, passowrd]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response: ApiResponse<AuthResponse> = await login({
+      const response: ApiResponse<AuthResponse> = await register({
         email: email,
-        password: passowrnd,
+        fullName: fullName,
+        password: passowrd,
       });
 
       if (response.data) {
         console.log("Response Data", response.data);
-        const userData = response.data;
-        dispatch(setCredentials({ email: email, token: userData.accessToken }));
+        const userData = response.data.data;
+        dispatch(
+          setCredentials({ user: userData.user, token: userData.token })
+        );
         setEmail("");
-        setpPassowrnd("");
+        setPassowrd("");
         navigate("/welcome");
       } else {
         handleLoginError(response.error);
@@ -56,11 +60,14 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleUserInput = (e: ChangeEvent<HTMLInputElement>) =>
+  const handleEmailInput = (e: ChangeEvent<HTMLInputElement>) =>
     setEmail(e.target.value);
 
-  const handlePwdInput = (e: ChangeEvent<HTMLInputElement>) =>
-    setpPassowrnd(e.target.value);
+  const handleFullNameInput = (e: ChangeEvent<HTMLInputElement>) =>
+    setFullName(e.target.value);
+
+  const handlePasswordInput = (e: ChangeEvent<HTMLInputElement>) =>
+    setPassowrd(e.target.value);
 
   const handleLoginError = (err: any) => {
     if (!err?.originalStatus) {
@@ -110,8 +117,25 @@ const Login: React.FC = () => {
               id="username"
               ref={userRef}
               value={email}
-              onChange={handleUserInput}
+              onChange={handleEmailInput}
               autoComplete="off"
+              required
+              className="mt-1 p-2 w-full border rounded-md"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-600"
+            >
+              Full Name:
+            </label>
+            <input
+              type="text"
+              id="fullName"
+              onChange={handleFullNameInput}
+              value={fullName}
               required
               className="mt-1 p-2 w-full border rounded-md"
             />
@@ -127,8 +151,8 @@ const Login: React.FC = () => {
             <input
               type="password"
               id="password"
-              onChange={handlePwdInput}
-              value={passowrnd}
+              onChange={handlePasswordInput}
+              value={passowrd}
               required
               className="mt-1 p-2 w-full border rounded-md"
             />
@@ -138,7 +162,7 @@ const Login: React.FC = () => {
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
           >
-            Sign In
+            Sign Up
           </button>
         </form>
       </div>
@@ -148,4 +172,4 @@ const Login: React.FC = () => {
   return content;
 };
 
-export default Login;
+export default Register;
